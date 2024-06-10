@@ -77,6 +77,10 @@ namespace HiVolunteerWeb.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
+            [Display(Name = "Full Name")]
+            public string FullName { get; set; }
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -109,7 +113,6 @@ namespace HiVolunteerWeb.Areas.Identity.Pages.Account
             public string MainCharacteristics { get; set; }
         }
 
-
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -124,6 +127,11 @@ namespace HiVolunteerWeb.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                user.FullName = Input.FullName;
+                user.AboutUser = Input.AboutUser;
+                user.MainCharacteristics = Input.MainCharacteristics;
+                
+                
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
