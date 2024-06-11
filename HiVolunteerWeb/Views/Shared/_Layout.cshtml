@@ -1,13 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@using HiVolunteerWeb.Entity
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> signInManager
+@inject UserManager<AppUser> userManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HiVolunteerWeb</title>
+    <title>@ViewData["Title"] - Hi!Volunteer</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HiVolunteerWeb.styles.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -25,6 +31,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            AppUser currentUser = await userManager.GetUserAsync(User);
+                            var IsAdmin = await userManager.IsInRoleAsync(currentUser, "Admin");
+                            var IsVolunteer = await userManager.IsInRoleAsync(currentUser, "Volunteer");
+
+                            if (IsAdmin)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AllVolunteerings">All Volunteerings</a>
+                                </li>
+                            }
+                        }
                     </ul>
                     <partial name="_LoginPartial.cshtml"></partial>
                 </div>
@@ -36,10 +56,10 @@
             @RenderBody()
         </main>
     </div>
-
+   
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - HiVolunteerWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - Hi!Volunteer - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
