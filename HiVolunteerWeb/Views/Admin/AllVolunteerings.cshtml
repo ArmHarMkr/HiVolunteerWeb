@@ -6,6 +6,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <style>
     .card {
         border: 1px solid #ddd;
@@ -39,27 +53,31 @@
 
 </style>
 
-@if(Model.Count != 0)
+@if (Model.Count != 0)
 {
- @foreach(var volunteering in Model)
-{
-    <div class="card">
-        <div class="card-header">
-            <h2>@volunteering.VolunteeringName</h2>
+    @foreach (var volunteering in Model)
+    {
+        <div class="card">
+            <div class="card-header">
+                <h2>@volunteering.VolunteeringName</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Description:</strong> @volunteering.Description</p>
+                <p><strong>Created Date:</strong> @volunteering.CreatedDate.ToShortDateString()</p>
+                <p><strong>Volunteering Date:</strong> @volunteering.VolunteeringDate.ToShortDateString()</p>
+                <p><strong>Deadline Date:</strong> @volunteering.DeadLineDate.ToShortDateString()</p>
+                <p><strong>Needs Acceptance:</strong> @(volunteering.IsNeededAccept ? "Yes" : "No")</p>
+                <p><strong>Food Available:</strong> @(volunteering.IsFoodAvailable ? "Yes" : "No")</p>
+                <p><strong>Active:</strong> @(volunteering.IsActive ? "Yes" : "No")</p>
+                <p><strong>Max People Count:</strong> @volunteering.MaxPeopleCount</p>
+                <p><strong>Registered Users:</strong> @volunteering.RegisteredUsers.Count()</p>
+            </div>
+            <form asp-action="DeleteVolunteering" asp-controller="Admin" asp-route-id="@volunteering.Id">
+                <button type="submit">Delete Volunteering</button>
+            </form>
+            <a asp-action="EditVolunteering" asp-controller="Admin" asp-route-id="@volunteering.Id">Edit Volunteering</a>
         </div>
-        <div class="card-body">
-            <p><strong>Description:</strong> @volunteering.Description</p>
-            <p><strong>Created Date:</strong> @volunteering.CreatedDate.ToShortDateString()</p>
-            <p><strong>Volunteering Date:</strong> @volunteering.VolunteeringDate.ToShortDateString()</p>
-            <p><strong>Deadline Date:</strong> @volunteering.DeadLineDate.ToShortDateString()</p>
-            <p><strong>Needs Acceptance:</strong> @(volunteering.IsNeededAccept ? "Yes" : "No")</p>
-            <p><strong>Food Available:</strong> @(volunteering.IsFoodAvailable ? "Yes" : "No")</p>
-            <p><strong>Active:</strong> @(volunteering.IsActive ? "Yes" : "No")</p>
-            <p><strong>Max People Count:</strong> @volunteering.MaxPeopleCount</p>
-            <p><strong>Registered Users:</strong> @volunteering.RegisteredUsers.Count()</p>
-        </div>
-    </div>
-    <a asp-action="AddVolunteering" asp-controller="Admin">Add Volunteering</a>
+        <a asp-action="AddVolunteering" asp-controller="Admin">Add Volunteering</a>
     }
 }
 else

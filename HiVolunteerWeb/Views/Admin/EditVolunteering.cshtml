@@ -1,9 +1,9 @@
 ﻿@using HiVolunteerWeb.Entities
 @model VolunteeringEntity
 
-<form asp-controller="Admin" asp-action="AddVolunteering" method="post">
+<form asp-controller="Admin" asp-action="EditVolunteering" method="post">
     <label asp-for="@Model.VolunteeringName" class="form-label"></label>
-    <input asp-for="@Model.VolunteeringName" class="form-control"/>
+    <input asp-for="@Model.VolunteeringName" class="form-control" />
     <span asp-validation-for="@Model.VolunteeringName" class="text-danger"></span>
 
     <label asp-for="@Model.Description" class="form-label"></label>
@@ -19,16 +19,16 @@
     <span asp-validation-for="@Model.DeadLineDate" class="text-danger"></span>
 
     <label asp-for="@Model.IsFoodAvailable" class="form-label"></label>
-    <input asp-for="@Model.IsFoodAvailable" type="checkbox"/>
+    <input asp-for="@Model.IsFoodAvailable" type="checkbox" />
     <span asp-validation-for="@Model.IsFoodAvailable" class="text-danger"></span>
 
     <label asp-for="@Model.IsNeededAccept" class="form-label"></label>
-    <input asp-for="@Model.IsNeededAccept" type="checkbox"/>
+    <input asp-for="@Model.IsNeededAccept" type="checkbox" />
     <span asp-validation-for="@Model.IsNeededAccept" class="text-danger"></span>
 
     <label asp-for="@Model.MaxPeopleCount" class="form-label"></label>
     <input asp-for="@Model.MaxPeopleCount" type="number" class="form-control" />
     <span asp-validation-for="@Model.MaxPeopleCount" class="text-danger"></span>
 
-    <button type="submit">Create Volunteering</button>
+    <button type="submit">Edit Volunteering</button>
 </form>

@@ -1,22 +1,29 @@
 ﻿using HiVolunteerWeb.Entity;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HiVolunteerWeb.Entities
 {
     public class VolunteeringEntity
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         [Required(ErrorMessage = "Enter Name")]
         public string VolunteeringName { get; set;}
         [Required(ErrorMessage = "Enter Description")]
         public string Description { get; set;}
         public DateTime CreatedDate { get; set; } = DateTime.Now;
+        [Required(ErrorMessage = "Enter Volunteering date")]
         public DateTime VolunteeringDate { get; set; }
+        [Required(ErrorMessage = "Enter Deadline date")]
         public DateTime DeadLineDate { get; set; }
+        [Required(ErrorMessage = "Check the box")]
         public bool IsNeededAccept { get; set; }
-        public bool IsFoodAvailable { get; set; } = true;
-        public bool IsActive { get;set; }
+        [Required(ErrorMessage = "Check the box")]
+        public bool IsFoodAvailable { get; set; }
+        public bool IsActive { get; set; } = true;
+        [Required(ErrorMessage = "Enter the max people")]
         public int MaxPeopleCount { get; set; }
-        public ICollection<AppUser> RegisteredUsers { get; set; }
+        [AllowNull]
+        public List<AppUser>? RegisteredUsers { get; set; } = new List<AppUser>();
     }
 }
