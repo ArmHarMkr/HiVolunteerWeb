@@ -6,7 +6,6 @@ namespace HiVolunteerWeb.Entity
 {
     public class AppUser : IdentityUser
     {
-        public Guid Id { get; set; }
         public string FullName { get; set; }
         [AllowNull]
         public string AboutUser { get; set; }
