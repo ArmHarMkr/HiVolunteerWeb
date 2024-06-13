@@ -86,5 +86,11 @@ namespace HiVolunteerWeb.Controllers
             TempData["ErrorMessage"] = "No Volunteering found";
             return RedirectToAction("EditVolunteering", new {id = volunteering.Id});
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AllUsers()
+        {
+            return View(await Context.Users.ToListAsync());
+        }
     }
 }

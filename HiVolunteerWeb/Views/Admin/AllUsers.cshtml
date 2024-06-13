@@ -1,0 +1,85 @@
+﻿@using HiVolunteerWeb.Entity
+@model IEnumerable<AppUser>
+
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even)
+</style>
+
+<div class="container">
+    <h1>User Properties</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Full Name</th>
+                <th>Is Active</th>
+                <th>Volunteering Count</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@user.FullName</td>
+                    <td>@user.IsAccepted ? "Yes" : "No"</td>
+                    <td>@user.VolunteeringCount</td>
+                    @if (!user.IsAccepted)
+                    {
+                        <td>
+                            <form asp-action="AcceptUser" asp-controller="Admin" asp-route-id="@user.Id">
+                                <button type="submit">Accept User</button>
+                            </form>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>User is accepted</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -11,6 +11,8 @@ namespace HiVolunteerWeb.Entities
         public string VolunteeringName { get; set;}
         [Required(ErrorMessage = "Enter Description")]
         public string Description { get; set;}
+        [Required(ErrorMessage = "Enter the Address")]
+        public string Address { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         [Required(ErrorMessage = "Enter Volunteering date")]
         public DateTime VolunteeringDate { get; set; }
