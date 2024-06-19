@@ -1,5 +1,4 @@
-﻿
-using HiVolunteerWeb.Data;
+﻿using HiVolunteerWeb.Data;
 using HiVolunteerWeb.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultUI()
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews()
@@ -29,6 +30,9 @@ builder.Services.AddRazorPages();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Comment out or remove the email sender service registration
+// builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,7 +42,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -52,7 +55,6 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 
 using (var scope = app.Services.CreateScope())
 {
@@ -72,14 +74,12 @@ using (var scope = app.Services.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
-
     if (await userManager.FindByEmailAsync("admin@admin.com") != null)
     {
         var user = await userManager.FindByEmailAsync("admin@admin.com");
         await userManager.RemoveFromRoleAsync(user, "Volunteer");
         await userManager.AddToRoleAsync(user, "Admin");
     }
-
 }
 
 app.Run();

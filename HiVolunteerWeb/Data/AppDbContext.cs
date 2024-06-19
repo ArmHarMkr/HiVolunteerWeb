@@ -12,6 +12,6 @@ namespace HiVolunteerWeb.Data
         }
 
         public DbSet<VolunteeringEntity> Volunteerings { get; set; }
-
+        public DbSet<WorkApplies> WorkApplies { get; set; }
     }
 }

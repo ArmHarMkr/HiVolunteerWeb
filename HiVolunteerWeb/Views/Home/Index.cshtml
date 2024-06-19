@@ -1,5 +1,7 @@
-﻿@using HiVolunteerWeb.Entity
+﻿@using HiVolunteerWeb.Entities
+@using HiVolunteerWeb.Entity
 @using Microsoft.AspNetCore.Identity
+@model IEnumerable<VolunteeringEntity>
 @inject UserManager<AppUser> userManager
 @inject SignInManager<AppUser> signInManager
 
@@ -25,4 +27,88 @@
     {
         <p>You are not an admin</p>
     }
+}
+
+
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<style>
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+        padding: 15px;
+        max-width: 400px;
+    }
+
+    .card-header {
+        background-color: #f7f7f7;
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px 5px 0 0;
+    }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+    .card-body {
+        padding: 10px;
+    }
+
+        .card-body p {
+            margin: 10px 0;
+            font-size: 1em;
+        }
+
+</style>
+
+@if (Model.Count() != 0)
+{
+    @foreach (var volunteering in Model)
+    {
+        <div class="card">
+            <div class="card-header">
+                <h2>@volunteering.VolunteeringName</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Description:</strong> @volunteering.Description</p>
+                <p><strong>Created Date:</strong> @volunteering.CreatedDate.ToShortDateString()</p>
+                <p><strong>Volunteering Date:</strong> @volunteering.VolunteeringDate.ToShortDateString()</p>
+                <p><strong>Deadline Date:</strong> @volunteering.DeadLineDate.ToShortDateString()</p>
+                <p><strong>Needs Acceptance:</strong> @(volunteering.IsNeededAccept ? "Yes" : "No")</p>
+                <p><strong>Food Available:</strong> @(volunteering.IsFoodAvailable ? "Yes" : "No")</p>
+                <p><strong>Active:</strong> @(volunteering.IsActive ? "Yes" : "No")</p>
+                <p><strong>Max People Count:</strong> @volunteering.MaxPeopleCount</p>
+                <p><strong>Registered Users:</strong> @volunteering.RegisteredUsers.Count()</p>
+            </div>
+            <form asp-action="ApplyToVolunteering" asp-controller="Home" asp-route-id="@volunteering.Id">
+                <button type="submit">Apply To This Volunteering</button>
+            </form>            
+
+        </div>
+    }
+}
+else
+{
+    <p>No volunteerings found.</p>
 }

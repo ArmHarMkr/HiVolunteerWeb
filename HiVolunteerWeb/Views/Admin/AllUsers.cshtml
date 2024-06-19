@@ -3,7 +3,6 @@
 @model IEnumerable<AppUser>
 @inject UserManager<AppUser> UserManager
 
-
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -13,22 +12,28 @@
     }
 
     .container {
-        max-width: 800px;
+        max-width: 100%;
         margin: 0 auto;
         background: #fff;
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+        border-radius: 8px; /* Rounded corners */
     }
 
     h1 {
         text-align: center;
         margin-bottom: 20px;
+        color: #333;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
+        background-color: #fff;
+        border-radius: 8px; /* Rounded corners for table */
+        overflow: hidden; /* Ensures rounded corners are visible */
     }
 
     table, th, td {
@@ -41,10 +46,37 @@
     }
 
     th {
-        background-color: #f2f2f2;
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
     }
 
-    tr:nth-child(even)
+    td {
+        background-color: #fff;
+        color: #333;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    button {
+        background-color: #4CAF50; /* Green background */
+        color: white; /* White text */
+        border: none; /* No border */
+        padding: 10px 20px; /* Some padding */
+        text-align: center; /* Centered text */
+        text-decoration: none; /* No underline */
+        display: inline-block; /* Make the button inline */
+        font-size: 14px; /* Increase font size */
+        margin: 4px 2px; /* Some margin */
+        cursor: pointer; /* Pointer/hand icon */
+        border-radius: 4px; /* Rounded corners */
+    }
+
+        button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
 </style>
 
 <div class="container">
@@ -54,7 +86,9 @@
             <tr>
                 <th>Email</th>
                 <th>Full Name</th>
-                <th>Is Active</th>
+                <th>Is Accepted</th>
+                <th>About Volunteer</th>
+                <th>Main Characteristics</th>
                 <th>Volunteering Count</th>
                 <th>Actions</th>
             </tr>
@@ -62,13 +96,14 @@
         <tbody>
             @foreach (var user in Model)
             {
-
                 <tr>
                     <td>@user.Email</td>
                     <td>@user.FullName</td>
                     <td>@(user.IsAccepted ? "Yes" : "No")</td>
+                    <td>@user.AboutUser</td>
+                    <td>@user.MainCharacteristics</td>
                     <td>@user.VolunteeringCount</td>
-                    if(!(await UserManager.IsInRoleAsync(user, "Admin")))
+                    @if (!(await UserManager.IsInRoleAsync(user, "Admin")))
                     {
                         @if (!user.IsAccepted)
                         {
@@ -83,10 +118,10 @@
                             <td>User is accepted</td>
                         }
                     }
-                    else{
+                    else
+                    {
                         <td>Admin</td>
                     }
-
                 </tr>
             }
         </tbody>
