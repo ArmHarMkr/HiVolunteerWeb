@@ -2,24 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using HiVolunteerWeb.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics.CodeAnalysis;
 
 namespace HiVolunteerWeb.Areas.Identity.Pages.Account
 {
@@ -31,7 +23,7 @@ namespace HiVolunteerWeb.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<AppUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly RoleManager<IdentityUser> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<AppUser> userManager,
@@ -39,7 +31,7 @@ namespace HiVolunteerWeb.Areas.Identity.Pages.Account
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityUser> roleManager)
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,6 +41,7 @@ namespace HiVolunteerWeb.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _roleManager = roleManager;
         }
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -136,7 +129,6 @@ namespace HiVolunteerWeb.Areas.Identity.Pages.Account
                 
                 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -145,7 +137,7 @@ namespace HiVolunteerWeb.Areas.Identity.Pages.Account
                     var defaultRole = _roleManager.FindByNameAsync("Volunteer").Result;
                     if (defaultRole != null)
                     {
-                        IdentityResult roleResult = await _userManager.AddToRoleAsync(user, defaultRole.UserName);
+                        IdentityResult roleResult = await _userManager.AddToRoleAsync(user, defaultRole.Name);
                     }
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

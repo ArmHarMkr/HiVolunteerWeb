@@ -6,6 +6,7 @@ namespace HiVolunteerWeb.Entity
 {
     public class AppUser : IdentityUser
     {
+        [Required(ErrorMessage = "Input your name")]
         public string FullName { get; set; }
         [AllowNull]
         public string AboutUser { get; set; }

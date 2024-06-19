@@ -1,7 +1,7 @@
-﻿using AspNetCore;
-using HiVolunteerWeb.Data;
+﻿using HiVolunteerWeb.Data;
 using HiVolunteerWeb.Entities;
 using HiVolunteerWeb.Entity;
+using HiVolunteerWeb.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,14 +14,19 @@ namespace HiVolunteerWeb.Controllers
     public class AdminController : Controller
     {
         private AppDbContext Context;
-        private UserManager<AppUser> _userManager;
-        private SignInManager<AppUser> _signInManager;
+        private UserManager<AppUser> UserManager;
+        private SignInManager<AppUser> SignInManager;
+        private IActionsWithVolunteers UserActions;
 
-        public AdminController(AppDbContext db, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AdminController(AppDbContext db, 
+            UserManager<AppUser> userManager, 
+            SignInManager<AppUser> signInManager,
+            IActionsWithVolunteers actionsWithVolunteers)
         {
             Context = db;
-            _userManager = userManager;
-            _signInManager = signInManager;
+            UserManager = userManager;
+            SignInManager = signInManager;
+            UserActions = actionsWithVolunteers;
         }
 
         public async Task<IActionResult> AllVolunteerings()
@@ -91,6 +96,15 @@ namespace HiVolunteerWeb.Controllers
         public async Task<IActionResult> AllUsers()
         {
             return View(await Context.Users.ToListAsync());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AcceptVolunteer(string id)
+        {
+            await UserActions.AcceptVolunteer(id);
+            await Context.SaveChangesAsync();
+
+            return RedirectToAction("AllUsers");
         }
     }
 }

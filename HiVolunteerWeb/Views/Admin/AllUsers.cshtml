@@ -1,6 +1,7 @@
 ﻿@using HiVolunteerWeb.Entity
+@using Microsoft.AspNetCore.Identity
 @model IEnumerable<AppUser>
-
+@inject UserManager<AppUser> UserManager
 
 
 <style>
@@ -61,23 +62,31 @@
         <tbody>
             @foreach (var user in Model)
             {
+
                 <tr>
                     <td>@user.Email</td>
                     <td>@user.FullName</td>
-                    <td>@user.IsAccepted ? "Yes" : "No"</td>
+                    <td>@(user.IsAccepted ? "Yes" : "No")</td>
                     <td>@user.VolunteeringCount</td>
-                    @if (!user.IsAccepted)
+                    if(!(await UserManager.IsInRoleAsync(user, "Admin")))
                     {
-                        <td>
-                            <form asp-action="AcceptUser" asp-controller="Admin" asp-route-id="@user.Id">
-                                <button type="submit">Accept User</button>
-                            </form>
-                        </td>
+                        @if (!user.IsAccepted)
+                        {
+                            <td>
+                                <form asp-action="AcceptVolunteer" asp-controller="Admin" asp-route-id="@user.Id">
+                                    <button type="submit">Accept User</button>
+                                </form>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>User is accepted</td>
+                        }
                     }
-                    else
-                    {
-                        <td>User is accepted</td>
+                    else{
+                        <td>Admin</td>
                     }
+
                 </tr>
             }
         </tbody>
