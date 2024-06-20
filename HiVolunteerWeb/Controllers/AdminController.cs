@@ -17,16 +17,19 @@ namespace HiVolunteerWeb.Controllers
         private UserManager<AppUser> UserManager;
         private SignInManager<AppUser> SignInManager;
         private IActionsWithVolunteers UserActions;
+        private IVolunteeringService VolunteeringService;
 
         public AdminController(AppDbContext db, 
             UserManager<AppUser> userManager, 
             SignInManager<AppUser> signInManager,
-            IActionsWithVolunteers actionsWithVolunteers)
+            IActionsWithVolunteers actionsWithVolunteers,
+            IVolunteeringService volunteeringService)
         {
             Context = db;
             UserManager = userManager;
             SignInManager = signInManager;
             UserActions = actionsWithVolunteers;
+            VolunteeringService = volunteeringService;
         }
 
         public async Task<IActionResult> AllVolunteerings()
@@ -105,6 +108,22 @@ namespace HiVolunteerWeb.Controllers
             await Context.SaveChangesAsync();
 
             return RedirectToAction("AllUsers");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllAppliedVolunteerings()
+        {
+            IEnumerable<WorkApplies> allApplications = VolunteeringService.GetAllApplications().OrderByDescending(c => c.AppliedDate);
+            return View(allApplications);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AcceptVolunteers(Guid id)
+        {
+            await VolunteeringService.AcceptApplication(id);
+            await Context.SaveChangesAsync();
+
+            return RedirectToAction("AllAppliedVolunteerings");
         }
     }
 }

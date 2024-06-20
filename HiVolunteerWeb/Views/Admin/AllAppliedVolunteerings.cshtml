@@ -1,0 +1,66 @@
+﻿@using HiVolunteerWeb.Entities
+@model IEnumerable<WorkApplies>
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applications</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        table th, table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+        table th {
+            background-color: #f2f2f2;
+        }
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Applied User</th>
+                <th>Volunteering</th>
+                <th>Is Accepted</th>
+                <th>Applied Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var application in Model)
+            {
+                <tr>
+                    <td>@application.AppliedUser.FullName</td>
+                    <td>@application.Volunteering.VolunteeringName</td>
+                    <td>@application.IsAccepted</td>
+                    <td>@application.AppliedDate.ToString("yyyy-MM-dd")</td>
+                        @if (!application.IsAccepted)
+                        {
+                            <td>
+                                <form asp-action="AcceptVolunteers" asp-controller="Admin" asp-route-id="@application.Id">
+                                    <button type="submit">Accept for Volunteering</button>
+                                </form>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>You have accepted this application</td>    
+                        }
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

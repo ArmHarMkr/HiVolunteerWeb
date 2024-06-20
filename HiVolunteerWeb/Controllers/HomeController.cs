@@ -2,6 +2,7 @@ using HiVolunteerWeb.Data;
 using HiVolunteerWeb.Entities;
 using HiVolunteerWeb.Entity;
 using HiVolunteerWeb.Models;
+using HiVolunteerWeb.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,17 @@ namespace HiVolunteerWeb.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext Context;
         private readonly UserManager<AppUser> UserManager;
+        private readonly IVolunteeringService VolunteeringService;
 
-        public HomeController(ILogger<HomeController> logger, AppDbContext context, UserManager<AppUser> userManager)
+        public HomeController(ILogger<HomeController> logger,
+                              AppDbContext context,
+                              UserManager<AppUser> userManager,
+                              IVolunteeringService volunteeringService)
         {
             _logger = logger;
             Context = context;
             UserManager = userManager;  
+            VolunteeringService = volunteeringService;
         }
 
         public async Task<IActionResult> Index()
@@ -63,14 +69,19 @@ namespace HiVolunteerWeb.Controllers
             }
             TempData["ErrorMessage"] = "You have applied for this volunteering or something went wrong.";
             return RedirectToAction("Index");
-
-
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AllAppliedVolunteerings()
+        {
+            var currentUser = await UserManager.GetUserAsync(User);
+            return View(VolunteeringService.GetAllApplications().Where(c => c.AppliedUser == currentUser));
         }
     }
 }
