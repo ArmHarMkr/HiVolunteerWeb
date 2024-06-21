@@ -18,18 +18,21 @@ namespace HiVolunteerWeb.Controllers
         private SignInManager<AppUser> SignInManager;
         private IActionsWithVolunteers UserActions;
         private IVolunteeringService VolunteeringService;
+        private INotificationService NotificationService;
 
         public AdminController(AppDbContext db, 
             UserManager<AppUser> userManager, 
             SignInManager<AppUser> signInManager,
             IActionsWithVolunteers actionsWithVolunteers,
-            IVolunteeringService volunteeringService)
+            IVolunteeringService volunteeringService,
+            INotificationService notificationService)
         {
             Context = db;
             UserManager = userManager;
             SignInManager = signInManager;
             UserActions = actionsWithVolunteers;
             VolunteeringService = volunteeringService;
+            NotificationService = notificationService;
         }
 
         public async Task<IActionResult> AllVolunteerings()
@@ -120,6 +123,8 @@ namespace HiVolunteerWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> AcceptVolunteers(Guid id)
         {
+            var currentUser = await UserManager.GetUserAsync(User);
+            await NotificationService.SendNotification(currentUser.Id, "Congratulations!", "Your application was approved", NotificationResponse.Success);
             await VolunteeringService.AcceptApplication(id);
             await Context.SaveChangesAsync();
 

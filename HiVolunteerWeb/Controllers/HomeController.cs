@@ -14,27 +14,42 @@ namespace HiVolunteerWeb.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly AppDbContext Context;
-        private readonly UserManager<AppUser> UserManager;
-        private readonly IVolunteeringService VolunteeringService;
+        private AppDbContext Context;
+        private UserManager<AppUser> UserManager;
+        private SignInManager<AppUser> SignInManager;
+        private IActionsWithVolunteers UserActions;
+        private IVolunteeringService VolunteeringService;
+        private INotificationService NotificationService;
 
-        public HomeController(ILogger<HomeController> logger,
-                              AppDbContext context,
-                              UserManager<AppUser> userManager,
-                              IVolunteeringService volunteeringService)
+        public HomeController(AppDbContext db,
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            IActionsWithVolunteers actionsWithVolunteers,
+            IVolunteeringService volunteeringService,
+            INotificationService notificationService)
         {
-            _logger = logger;
-            Context = context;
-            UserManager = userManager;  
+            Context = db;
+            UserManager = userManager;
+            SignInManager = signInManager;
+            UserActions = actionsWithVolunteers;
             VolunteeringService = volunteeringService;
+            NotificationService = notificationService;
         }
 
         public async Task<IActionResult> Index()
         {
             var user = await UserManager.GetUserAsync(User);
             bool isAccepted = user.IsAccepted;
-            IEnumerable<VolunteeringEntity> allAllowedVolunteerings = Context.Volunteerings.Where(v => v.DeadLineDate < DateTime.Now).Where(v => v.IsNeededAccept == isAccepted);
+            IEnumerable<VolunteeringEntity> allAllowedVolunteerings;
+            if (user.IsAccepted)
+            {
+                allAllowedVolunteerings = Context.Volunteerings.Where(v => v.DeadLineDate < DateTime.Now);
+            }
+            else
+            {
+                allAllowedVolunteerings = Context.Volunteerings.Where(v => v.DeadLineDate < DateTime.Now)
+                    .Where(v => v.IsNeededAccept == isAccepted);
+            }
             return View(allAllowedVolunteerings);
         }
 

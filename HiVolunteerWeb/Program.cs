@@ -25,6 +25,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IActionsWithVolunteers, AcceptVolunteerService>();
 builder.Services.AddScoped<IVolunteeringService, VolunteeringService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddRazorPages();
 

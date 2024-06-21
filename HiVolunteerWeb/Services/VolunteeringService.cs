@@ -20,12 +20,14 @@ namespace HiVolunteerWeb.Services
 
         public async Task AcceptApplication(Guid applicationId)
         {
-            var workApp = await Context.WorkApplies.FirstOrDefaultAsync(c => c.Id == applicationId);
+            var workApp = await Context.WorkApplies.Include(c => c.AppliedUser).Include(c => c.Volunteering).FirstOrDefaultAsync(c => c.Id == applicationId);
             if(workApp == null)
             {
                 throw new Exception("No application found");
             }
 
+            workApp.Volunteering.RegisteredUsers.Add(workApp.AppliedUser);
+            workApp.AppliedUser.VolunteeringCount++;
             workApp.IsAccepted = true;
             Context.WorkApplies.Update(workApp);
             await Context.SaveChangesAsync();
