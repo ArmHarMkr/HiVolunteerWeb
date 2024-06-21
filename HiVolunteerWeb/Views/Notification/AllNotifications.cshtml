@@ -1,0 +1,64 @@
+﻿@using HiVolunteerWeb.Entities
+@model IEnumerable<NotificationEntity>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .notification {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+        .notification h2 {
+            margin: 0 0 10px;
+            font-size: 24px;
+        }
+        .notification p {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        .notification time {
+            font-size: 14px;
+            color: #666;
+        }
+        .notification-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .notification-alert {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+        .notification-fail {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .notification-other {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notifications</h1>
+    @foreach (var notification in Model)
+    {
+        <div class="notification notification-@notification.NotificationResponse.ToString().ToLower()">
+            <h2>@notification.Title</h2>
+            <p>@notification.Description</p>
+            <time>@notification.DateTime.ToString("yyyy-MM-dd HH:mm")</time>
+        </div>
+    }
+</body>
+</html>

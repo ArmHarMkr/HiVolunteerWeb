@@ -68,7 +68,7 @@ namespace HiVolunteerWeb.Controllers
                 TempData["ErrorMessage"] = "You are not allowed to apply for this volunteering";
                 return RedirectToAction("Index");
             }
-            if(!await Context.WorkApplies.AnyAsync(c => c.AppliedUser == user))
+            if(await Context.WorkApplies.FirstOrDefaultAsync(c => c.Volunteering == applyingVolunteering) == null)
             {
                 WorkApplies workApplies = new()
                 {

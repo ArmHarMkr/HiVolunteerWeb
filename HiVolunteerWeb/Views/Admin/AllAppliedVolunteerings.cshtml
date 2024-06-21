@@ -49,7 +49,7 @@
                         @if (!application.IsAccepted)
                         {
                             <td>
-                                <form asp-action="AcceptVolunteers" asp-controller="Admin" asp-route-id="@application.Id">
+                            <form asp-action="AcceptApplication" asp-controller="Admin" asp-route-id="@application.Id">
                                     <button type="submit">Accept for Volunteering</button>
                                 </form>
                             </td>

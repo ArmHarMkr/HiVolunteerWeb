@@ -8,6 +8,7 @@ namespace HiVolunteerWeb.Entities
         public AppUser NotificationSendingUser { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public DateTime DateTime { get; set; } = DateTime.Now;
         public NotificationResponse NotificationResponse { get; set; }
     }
 

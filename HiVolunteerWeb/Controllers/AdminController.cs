@@ -121,10 +121,9 @@ namespace HiVolunteerWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AcceptVolunteers(Guid id)
+        public async Task<IActionResult> AcceptApplication(Guid id)
         {
-            var currentUser = await UserManager.GetUserAsync(User);
-            await NotificationService.SendNotification(currentUser.Id, "Congratulations!", "Your application was approved", NotificationResponse.Success);
+            await NotificationService.SendNotification(id.ToString(), "Congratulations!", "Your application was approved", NotificationResponse.Success);
             await VolunteeringService.AcceptApplication(id);
             await Context.SaveChangesAsync();
 
