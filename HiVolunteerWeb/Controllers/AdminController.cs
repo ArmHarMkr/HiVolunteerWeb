@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client.Extensibility;
 
 namespace HiVolunteerWeb.Controllers
 {
@@ -69,7 +70,7 @@ namespace HiVolunteerWeb.Controllers
                 TempData["SuccessMessage"] = "Volunteering deleted successfully";
                 return RedirectToAction("AllVolunteerings");
             }
-            TempData["ErrorMessage"] = "Volunteering deleted successfully";
+            TempData["ErrorMessage"] = "Volunteering was not found";
             return RedirectToAction("AllVolunteerings");
         }
 
@@ -107,6 +108,17 @@ namespace HiVolunteerWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> AcceptVolunteer(string id)
         {
+            var acceptingUser = await UserManager.Users.FirstOrDefaultAsync(c => c.Id == id);
+            NotificationEntity notification = new()
+            {
+                NotificationSendingUser = acceptingUser,
+                NotificationSendingUserId = acceptingUser.Id,
+                Title = "You have been accepted",
+                Description = "Your application to become a volunteer has been accepted",
+                NotificationResponse = NotificationResponse.Success
+            };
+
+            await Context.Notifications.AddAsync(notification);
             await UserActions.AcceptVolunteer(id);
             await Context.SaveChangesAsync();
 
@@ -123,8 +135,41 @@ namespace HiVolunteerWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> AcceptApplication(Guid id)
         {
-            await NotificationService.SendNotification(id.ToString(), "Congratulations!", "Your application was approved", NotificationResponse.Success);
+            var acceptingWorkApplication = await Context.WorkApplies.Include(c => c.AppliedUser).Include(c => c.Volunteering).FirstOrDefaultAsync(c => c.Id == id);
+            NotificationEntity notification = new()
+            {
+                NotificationSendingUser = acceptingWorkApplication.AppliedUser,
+                NotificationSendingUserId = acceptingWorkApplication.AppliedUser.Id,
+                Title = "You work application has been accepted",
+                Description = "Your application was accepted. You can see all your applications on the AllApplications Service",
+                NotificationResponse = NotificationResponse.Success
+            };
             await VolunteeringService.AcceptApplication(id);
+            Context.Notifications.Add(notification);
+            await Context.SaveChangesAsync();
+
+            return RedirectToAction("AllAppliedVolunteerings");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectAplication(Guid id)
+        {
+            var rejectingApplication = await Context.WorkApplies.Include(c => c.AppliedUser).Include(c => c.Volunteering).FirstOrDefaultAsync(c => c.Id == id);
+            if(rejectingApplication == null)
+            {
+                TempData["ErrorMessage"] = "No volunteering found";
+                return RedirectToAction("AllAppliedVolunteerings");
+            }
+            NotificationEntity notification = new()
+            {
+                NotificationSendingUser = rejectingApplication.AppliedUser,
+                NotificationSendingUserId = rejectingApplication.AppliedUser.Id,
+                Title = "You work application has been rejected",
+                Description = "Your application was rejected. You can see all your applications on the AllApplications Service",
+                NotificationResponse = NotificationResponse.Alert
+            };
+            Context.WorkApplies.Remove(rejectingApplication);
+            Context.Notifications.Add(notification);
             await Context.SaveChangesAsync();
 
             return RedirectToAction("AllAppliedVolunteerings");

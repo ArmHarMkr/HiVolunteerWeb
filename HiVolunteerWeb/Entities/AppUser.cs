@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using HiVolunteerWeb.Entities;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
@@ -14,5 +15,6 @@ namespace HiVolunteerWeb.Entity
         [AllowNull]
         public string MainCharacteristics { get; set; }
         public int VolunteeringCount { get; set; } = 0;
+        public ICollection<NotificationEntity> Notifications { get; set; }
     }
 }

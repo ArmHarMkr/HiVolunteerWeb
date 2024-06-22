@@ -35,7 +35,8 @@
                 <th>Volunteering</th>
                 <th>Is Accepted</th>
                 <th>Applied Date</th>
-                <th>Action</th>
+                <th>Accept</th>
+                <th>Reject</th>
             </tr>
         </thead>
         <tbody>
@@ -49,9 +50,14 @@
                         @if (!application.IsAccepted)
                         {
                             <td>
-                            <form asp-action="AcceptApplication" asp-controller="Admin" asp-route-id="@application.Id">
+                                <form asp-action="AcceptApplication" asp-controller="Admin" asp-route-id="@application.Id">
                                     <button type="submit">Accept for Volunteering</button>
                                 </form>
+                            </td>
+                            <td>
+                            <form asp-action="RejectAplication" asp-controller="Admin" asp-route-id="@application.Id">
+                                <button type="submit">Accept for Volunteering</button>
+                            </form>
                             </td>
                         }
                         else

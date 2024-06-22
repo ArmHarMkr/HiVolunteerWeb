@@ -14,5 +14,16 @@ namespace HiVolunteerWeb.Data
         public DbSet<VolunteeringEntity> Volunteerings { get; set; }
         public DbSet<WorkApplies> WorkApplies { get; set; }
         public DbSet<NotificationEntity> Notifications { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<NotificationEntity>()
+                .HasOne(n => n.NotificationSendingUser)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.NotificationSendingUserId);
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }

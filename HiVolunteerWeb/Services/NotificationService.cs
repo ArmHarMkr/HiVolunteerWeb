@@ -20,8 +20,13 @@ namespace HiVolunteerWeb.Services
         public async Task SendNotification(string userID, string title, string description, NotificationResponse notificationResponse)
         {
             var currentUser = await UserManager.Users.FirstOrDefaultAsync(c => c.Id == userID);
+            if (currentUser == null)
+            {
+                throw new Exception("User not found");
+            }
             NotificationEntity notification = new()
             {
+                NotificationSendingUserId = userID,
                 NotificationSendingUser = currentUser,
                 Title = title,
                 Description = description,
@@ -31,6 +36,7 @@ namespace HiVolunteerWeb.Services
             Context.Notifications.Add(notification);
             await Context.SaveChangesAsync();
         }
+
 
         public async Task<IEnumerable<NotificationEntity>> GetAllNotificationForUser(string userId)
         {
