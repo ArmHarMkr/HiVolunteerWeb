@@ -39,18 +39,22 @@ namespace HiVolunteerWeb.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await UserManager.GetUserAsync(User);
-            bool isAccepted = user.IsAccepted;
-            IEnumerable<VolunteeringEntity> allAllowedVolunteerings;
-            if (user.IsAccepted)
+            if (!await UserManager.IsInRoleAsync(user, "Admin"))
             {
-                allAllowedVolunteerings = Context.Volunteerings.Where(v => v.DeadLineDate < DateTime.Now);
+                bool isAccepted = user.IsAccepted;
+                IEnumerable<VolunteeringEntity> allAllowedVolunteerings;
+                if (user.IsAccepted)
+                {
+                    allAllowedVolunteerings = Context.Volunteerings.Where(v => v.DeadLineDate < DateTime.Now).Where(c => c.IsActive);
+                }
+                else
+                {
+                    allAllowedVolunteerings = Context.Volunteerings.Where(v => v.DeadLineDate < DateTime.Now)
+                        .Where(v => v.IsNeededAccept == isAccepted).Where(c => c.IsActive);
+                }
+                return View(allAllowedVolunteerings);
             }
-            else
-            {
-                allAllowedVolunteerings = Context.Volunteerings.Where(v => v.DeadLineDate < DateTime.Now)
-                    .Where(v => v.IsNeededAccept == isAccepted);
-            }
-            return View(allAllowedVolunteerings);
+            return RedirectToAction("AllVolunteerings", "Admin");
         }
 
         [HttpPost]
@@ -85,7 +89,7 @@ namespace HiVolunteerWeb.Controllers
             TempData["ErrorMessage"] = "You have applied for this volunteering or something went wrong.";
             return RedirectToAction("Index");
         }
-
+            
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

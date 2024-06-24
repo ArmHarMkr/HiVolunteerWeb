@@ -9,23 +9,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-@if (signInManager.IsSignedIn(User))
-{
-    var currentUser = await userManager.GetUserAsync(User);
-    var isAdmin = await userManager.IsInRoleAsync(currentUser, "Admin");
-
-    if (isAdmin)
-    {
-        <p>You are admin</p>
-    }
-    else
-    {
-        <p>You are not an admin</p>
-    }
-}
-
-
-
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -93,8 +76,6 @@
                 <p><strong>Needs Acceptance:</strong> @(volunteering.IsNeededAccept ? "Yes" : "No")</p>
                 <p><strong>Food Available:</strong> @(volunteering.IsFoodAvailable ? "Yes" : "No")</p>
                 <p><strong>Active:</strong> @(volunteering.IsActive ? "Yes" : "No")</p>
-                <p><strong>Max People Count:</strong> @volunteering.MaxPeopleCount</p>
-                <p><strong>Registered Users:</strong> @volunteering.RegisteredUsers.Count()</p>
             </div>
             <form asp-action="ApplyToVolunteering" asp-controller="Home" asp-route-id="@volunteering.Id">
                 <button type="submit">Apply To This Volunteering</button>

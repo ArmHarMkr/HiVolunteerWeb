@@ -88,7 +88,6 @@
                     <p><strong>Needs Acceptance:</strong> @(volunteering.IsNeededAccept ? "Yes" : "No")</p>
                     <p><strong>Food Available:</strong> @(volunteering.IsFoodAvailable ? "Yes" : "No")</p>
                     <p><strong>Active:</strong> @(volunteering.IsActive ? "Yes" : "No")</p>
-                    <p><strong>Max People Count:</strong> @volunteering.MaxPeopleCount</p>
                     <p><strong>Registered Users:</strong> @volunteering.RegisteredUsers.Count()</p>
                 </div>
                 <div class="card-actions">
@@ -96,6 +95,8 @@
                         <button type="submit">Delete Volunteering</button>
                     </form>
                     <a asp-action="EditVolunteering" asp-controller="Admin" asp-route-id="@volunteering.Id">Edit Volunteering</a>
+                    <a asp-action="GetVolunteeringInfo" asp-controller="Admin" asp-route-id="@volunteering.Id">Get Volunteering Information</a>
+
                 </div>
             </div>
         }

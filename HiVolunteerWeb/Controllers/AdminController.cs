@@ -3,6 +3,7 @@ using HiVolunteerWeb.Entities;
 using HiVolunteerWeb.Entity;
 using HiVolunteerWeb.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -65,7 +66,7 @@ namespace HiVolunteerWeb.Controllers
             VolunteeringEntity deletingVol = await Context.Volunteerings.FirstOrDefaultAsync(c => c.Id == id);
             if(deletingVol != null)
             {
-                Context.Remove(deletingVol);
+                deletingVol.IsActive = false;
                 await Context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Volunteering deleted successfully";
                 return RedirectToAction("AllVolunteerings");
@@ -144,6 +145,7 @@ namespace HiVolunteerWeb.Controllers
                 Description = "Your application was accepted. You can see all your applications on the AllApplications Service",
                 NotificationResponse = NotificationResponse.Success
             };
+            acceptingWorkApplication.Volunteering.RegisteredUsers.Add(acceptingWorkApplication.AppliedUser);
             await VolunteeringService.AcceptApplication(id);
             Context.Notifications.Add(notification);
             await Context.SaveChangesAsync();
@@ -174,5 +176,20 @@ namespace HiVolunteerWeb.Controllers
 
             return RedirectToAction("AllAppliedVolunteerings");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVolunteeringInfo(Guid id)
+        {
+            var volunteering = await Context.Volunteerings.Include(c => c.RegisteredUsers).FirstOrDefaultAsync(c => c.Id == id);
+            
+            if(volunteering == null)
+            {
+                TempData["ErrorMessage"] = "Volunteering not found";
+                return RedirectToAction("AllVolunteerings");
+            }
+
+            return View(volunteering);
+        }
+
     }
 }

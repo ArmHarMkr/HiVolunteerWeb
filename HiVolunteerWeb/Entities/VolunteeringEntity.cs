@@ -23,8 +23,6 @@ namespace HiVolunteerWeb.Entities
         [Required(ErrorMessage = "Check the box")]
         public bool IsFoodAvailable { get; set; }
         public bool IsActive { get; set; } = true;
-        [Required(ErrorMessage = "Enter the max people")]
-        public int MaxPeopleCount { get; set; }
         [AllowNull]
         public List<AppUser>? RegisteredUsers { get; set; } = new List<AppUser>();
     }
