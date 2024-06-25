@@ -1,0 +1,99 @@
+﻿@model HiVolunteerWeb.Entity.AppUser
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <style>
+        .profile-card {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+            .profile-card h2 {
+                text-align: center;
+            }
+
+            .profile-card label {
+                display: block;
+                margin: 10px 0 5px;
+            }
+
+            .profile-card input[type="text"],
+            .profile-card input[type="email"],
+            .profile-card textarea {
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .profile-card button {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                background-color: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+                .profile-card button:hover {
+                    background-color: #0056b3;
+                }
+    </style>
+</head>
+<body>
+    <div class="profile-card">
+        <h2>Edit Profile</h2>
+        <form asp-action="SaveProfile" method="post">
+            <div>
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="FullName" value="@Model.FullName" readonly />
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="Email" value="@Model.Email" readonly />
+            </div>
+            <div>
+                <label for="volunteeringCount">Volunteering Count: @Model.VolunteeringCount</label>
+            </div>
+            <div>
+                <label for="aboutUser">About User</label>
+                <textarea id="aboutUser" name="AboutUser" rows="4">@Model.AboutUser</textarea>
+            </div>
+            <div>
+                <label for="mainCharacteristics">Main Characteristics</label>
+                <textarea id="mainCharacteristics" name="MainCharacteristics" rows="4">@Model.MainCharacteristics</textarea>
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</body>
+</html>

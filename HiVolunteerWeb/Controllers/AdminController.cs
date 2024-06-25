@@ -146,6 +146,7 @@ namespace HiVolunteerWeb.Controllers
                 NotificationResponse = NotificationResponse.Success
             };
             acceptingWorkApplication.Volunteering.RegisteredUsers.Add(acceptingWorkApplication.AppliedUser);
+            acceptingWorkApplication.AppliedUser.VolunteeringCount++;
             await VolunteeringService.AcceptApplication(id);
             Context.Notifications.Add(notification);
             await Context.SaveChangesAsync();

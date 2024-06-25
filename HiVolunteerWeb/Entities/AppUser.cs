@@ -16,5 +16,9 @@ namespace HiVolunteerWeb.Entity
         public string MainCharacteristics { get; set; }
         public int VolunteeringCount { get; set; } = 0;
         public ICollection<NotificationEntity> Notifications { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
     }
 }

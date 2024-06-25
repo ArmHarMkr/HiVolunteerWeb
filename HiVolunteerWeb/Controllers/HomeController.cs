@@ -63,16 +63,16 @@ namespace HiVolunteerWeb.Controllers
             var user = await UserManager.GetUserAsync(User);
             bool isAccepted = user.IsAccepted;
             VolunteeringEntity? applyingVolunteering = await Context.Volunteerings.FirstOrDefaultAsync(c => c.Id == id);
-            if(applyingVolunteering == null)
+            if (applyingVolunteering == null)
             {
                 return BadRequest("No volunteering found. Try again");
             }
-            if(applyingVolunteering.IsNeededAccept != isAccepted)
+            if (applyingVolunteering.IsNeededAccept != isAccepted)
             {
                 TempData["ErrorMessage"] = "You are not allowed to apply for this volunteering";
                 return RedirectToAction("Index");
             }
-            if(await Context.WorkApplies.FirstOrDefaultAsync(c => c.Volunteering == applyingVolunteering) == null)
+            if (await Context.WorkApplies.FirstOrDefaultAsync(c => c.Volunteering == applyingVolunteering) == null)
             {
                 WorkApplies workApplies = new()
                 {
@@ -89,7 +89,7 @@ namespace HiVolunteerWeb.Controllers
             TempData["ErrorMessage"] = "You have applied for this volunteering or something went wrong.";
             return RedirectToAction("Index");
         }
-            
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -102,5 +102,35 @@ namespace HiVolunteerWeb.Controllers
             var currentUser = await UserManager.GetUserAsync(User);
             return View(VolunteeringService.GetAllApplications().Where(c => c.AppliedUser == currentUser));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVolunteerInformation()
+        {
+            var currentUser = await UserManager.GetUserAsync(User);
+
+            return View(currentUser);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveProfile(AppUser appUser)
+        {
+            var currentUser = await UserManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction("Index");
+            }
+
+            currentUser.AboutUser = appUser.AboutUser;
+            currentUser.MainCharacteristics = appUser.MainCharacteristics;
+
+            currentUser.RowVersion = appUser.RowVersion;
+            await Context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Profile updated successfully.";
+
+            return RedirectToAction("Index");
+        }
+
     }
 }
