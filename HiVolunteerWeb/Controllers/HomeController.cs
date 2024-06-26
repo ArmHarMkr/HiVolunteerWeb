@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Linq;
 
 namespace HiVolunteerWeb.Controllers
 {
@@ -63,30 +64,36 @@ namespace HiVolunteerWeb.Controllers
             var user = await UserManager.GetUserAsync(User);
             bool isAccepted = user.IsAccepted;
             VolunteeringEntity? applyingVolunteering = await Context.Volunteerings.FirstOrDefaultAsync(c => c.Id == id);
+
             if (applyingVolunteering == null)
             {
                 return BadRequest("No volunteering found. Try again");
             }
+
             if (applyingVolunteering.IsNeededAccept != isAccepted)
             {
                 TempData["ErrorMessage"] = "You are not allowed to apply for this volunteering";
                 return RedirectToAction("Index");
             }
-            if (await Context.WorkApplies.FirstOrDefaultAsync(c => c.Volunteering == applyingVolunteering) == null)
+
+            var currentUser = await UserManager.GetUserAsync(User);
+
+            if (applyingVolunteering.RegisteredUsers.Any(u => u.Id == user.Id))
             {
-                WorkApplies workApplies = new()
-                {
-                    AppliedUser = user,
-                    Volunteering = applyingVolunteering
-                };
-
-                Context.WorkApplies.Add(workApplies);
-                await Context.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = "You applied successfully";
+                TempData["ErrorMessage"] = "You have already applied for this volunteering.";
                 return RedirectToAction("Index");
             }
-            TempData["ErrorMessage"] = "You have applied for this volunteering or something went wrong.";
+
+            WorkApplies workApplies = new()
+            {
+                AppliedUser = user,
+                Volunteering = applyingVolunteering
+            };
+
+            Context.WorkApplies.Add(workApplies);
+            await Context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "You applied successfully";
             return RedirectToAction("Index");
         }
 

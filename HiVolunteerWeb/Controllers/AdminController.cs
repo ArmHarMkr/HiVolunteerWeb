@@ -113,7 +113,6 @@ namespace HiVolunteerWeb.Controllers
             NotificationEntity notification = new()
             {
                 NotificationSendingUser = acceptingUser,
-                NotificationSendingUserId = acceptingUser.Id,
                 Title = "You have been accepted",
                 Description = "Your application to become a volunteer has been accepted",
                 NotificationResponse = NotificationResponse.Success
@@ -140,8 +139,7 @@ namespace HiVolunteerWeb.Controllers
             NotificationEntity notification = new()
             {
                 NotificationSendingUser = acceptingWorkApplication.AppliedUser,
-                NotificationSendingUserId = acceptingWorkApplication.AppliedUser.Id,
-                Title = "You work application has been accepted",
+                Title = "You volunteering application has been accepted",
                 Description = "Your application was accepted. You can see all your applications on the AllApplications Service",
                 NotificationResponse = NotificationResponse.Success
             };
@@ -166,7 +164,6 @@ namespace HiVolunteerWeb.Controllers
             NotificationEntity notification = new()
             {
                 NotificationSendingUser = rejectingApplication.AppliedUser,
-                NotificationSendingUserId = rejectingApplication.AppliedUser.Id,
                 Title = "You work application has been rejected",
                 Description = "Your application was rejected. You can see all your applications on the AllApplications Service",
                 NotificationResponse = NotificationResponse.Alert
