@@ -19,33 +19,52 @@
 }
 
 <form asp-controller="Admin" asp-action="AddVolunteering" method="post">
-    <label asp-for="@Model.VolunteeringName" class="form-label"></label>
-    <input asp-for="@Model.VolunteeringName" class="form-control"/>
-    <span asp-validation-for="@Model.VolunteeringName" class="text-danger"></span>
-
-    <label asp-for="@Model.Description" class="form-label"></label>
-    <input asp-for="@Model.Description" type="text" class="form-control" />
-    <span asp-validation-for="@Model.Description" class="text-danger"></span>
-
-    <label asp-for="@Model.Address" class="form-label"></label>
-    <input asp-for="@Model.Address" type="text" class="form-control" />
-    <span asp-validation-for="@Model.Address" class="text-danger"></span>
-
-    <label asp-for="@Model.VolunteeringDate">Select volunteering date:</label>
-    <input asp-for="@Model.VolunteeringDate" type="date" id="date" name="date">
-    <span asp-validation-for="@Model.VolunteeringDate" class="text-danger"></span>
-
-    <label asp-for="@Model.DeadLineDate">Select deadline date:</label>
-    <input asp-for="@Model.DeadLineDate" type="date" id="date" name="date">
-    <span asp-validation-for="@Model.DeadLineDate" class="text-danger"></span>
-
-    <label asp-for="@Model.IsFoodAvailable" class="form-label"></label>
-    <input asp-for="@Model.IsFoodAvailable" type="checkbox"/>
-    <span asp-validation-for="@Model.IsFoodAvailable" class="text-danger"></span>
-
-    <label asp-for="@Model.IsNeededAccept" class="form-label"></label>
-    <input asp-for="@Model.IsNeededAccept" type="checkbox"/>
-    <span asp-validation-for="@Model.IsNeededAccept" class="text-danger"></span>
-
-    <button type="submit">Create Volunteering</button>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="VolunteeringName" class="form-label"></label>
+            <input asp-for="VolunteeringName" class="form-control" />
+            <span asp-validation-for="VolunteeringName" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Description" class="form-label"></label>
+            <input asp-for="Description" type="text" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="Address" class="form-label"></label>
+            <input asp-for="Address" type="text" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="VolunteeringDate" class="form-label">Select volunteering date:</label>
+            <input asp-for="VolunteeringDate" type="date" class="form-control" />
+            <span asp-validation-for="VolunteeringDate" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="DeadLineDate" class="form-label">Select deadline date:</label>
+            <input asp-for="DeadLineDate" type="date" class="form-control" />
+            <span asp-validation-for="DeadLineDate" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="form-check">
+                <input asp-for="IsFoodAvailable" type="checkbox" class="form-check-input" />
+                <label asp-for="IsFoodAvailable" class="form-check-label"></label>
+                <span asp-validation-for="IsFoodAvailable" class="text-danger"></span>
+            </div>
+            <div class="form-check">
+                <input asp-for="IsNeededAccept" type="checkbox" class="form-check-input" />
+                <label asp-for="IsNeededAccept" class="form-check-label"></label>
+                <span asp-validation-for="IsNeededAccept" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-12 text-center">
+            <button type="submit" class="btn btn-primary">Create Volunteering</button>
+        </div>
+    </div>
 </form>
